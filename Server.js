@@ -1,57 +1,20 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
-const path = require('path');
 const cors = require("cors");
 const app = express();
 const bcrypt = require("bcrypt");
+const path = require('path');
 const saltRounds = 10;
 const Register = require("./Register");
 const Schema = mongoose.Schema;
 const Product = require("./Product");
-const imageCollect = new Schema({
-  iteam:{
-      type:String,
-      required:true,
-  },
-  price:{
-      type:Number,
-      required:true,
-  }
-  ,description:{
-      type:String,
-      required:true,
-  },
-  tags:{
-      type:String,
-      required:true,
-  },
-  size:{
-      type:String,
-      required:true,
-  },
-  BrandName:{
-      type:String,
-      required:true,
-  },
-  offer:{
-      type:Number,
-      required:true
-  },
-  imageID:{
-      type:String,
-      required:true
-  }
-  });
-const port = 5000 || process.env.port;
+const imageCollect = require("./imageCollect")
+const port = 5000;
 const RU = mongoose.model("users", Register);
 const RP = mongoose.model("product", Product);
 const IC = mongoose.model("imageCollect", imageCollect);
 const multer  = require('multer')
-app.use(express.static(path.join(__dirname, 'build')));
-app.get('/', function(req, res) {
-  res.sendFile(path.join(__dirname, 'build', 'index.html'));
-});
 const avatar = multer({
     limits:{
         fileSize:1000000,
@@ -76,7 +39,10 @@ app.use(bodyParser.json());
 // Database Model
 // Route
 // Get
-
+app.use(express.static(path.join(__dirname, 'build')));
+app.get('/', function(req, res) {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
 app.get("/geTiMagE/:id",(req,res)=>{
   IC.find({imageID:req.params.id},function(err, result) {
     if (err) {
