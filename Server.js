@@ -8,8 +8,41 @@ const bcrypt = require("bcrypt");
 const saltRounds = 10;
 const Register = require("./Register");
 const Schema = mongoose.Schema;
-const Product = require(__dirname + "./Product");
-const imageCollect = require("./imageCollect")
+const Product = require("./Product");
+const imageCollect = new Schema({
+  iteam:{
+      type:String,
+      required:true,
+  },
+  price:{
+      type:Number,
+      required:true,
+  }
+  ,description:{
+      type:String,
+      required:true,
+  },
+  tags:{
+      type:String,
+      required:true,
+  },
+  size:{
+      type:String,
+      required:true,
+  },
+  BrandName:{
+      type:String,
+      required:true,
+  },
+  offer:{
+      type:Number,
+      required:true
+  },
+  imageID:{
+      type:String,
+      required:true
+  }
+  });
 const port = 5000 || process.env.port;
 const RU = mongoose.model("users", Register);
 const RP = mongoose.model("product", Product);
