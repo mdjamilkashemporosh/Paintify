@@ -4,13 +4,13 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const app = express();
 const bcrypt = require("bcrypt");
-const path = require('path');
 const saltRounds = 10;
 const Register = require("./Register");
 const Schema = mongoose.Schema;
 const Product = require("./Product");
-const imageCollect = require("./imagecollect")
-const port = 5000;
+const imageCollect = require('./imageCollect')
+const port = 5000 || process.env.port;
+const path = require('path');
 const RU = mongoose.model("users", Register);
 const RP = mongoose.model("product", Product);
 const IC = mongoose.model("imageCollect", imageCollect);
@@ -36,16 +36,22 @@ const BA = mongoose.model("Brand", AddBrand );
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(express.static(path.join(__dirname, 'build')));
 // Database Model
 // Route
 // Get
-app.use(express.static(path.join(__dirname, 'build')));
-app.get('/*', function(req, res) {
+app.get('/', function(req, res) {
   res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
-app.get('/product', function(req, res) {
-  res.sendFile(path.join(__dirname, 'build', 'index.html'));
-});
+app.get("/getuserdata/:id",(req,res)=>{
+  RU.find({_id:req.params.id},function(err, result) {
+    if (err) {
+    } else {
+      res.send(result);
+    }
+  });
+})
+
 app.get("/geTiMagE/:id",(req,res)=>{
   IC.find({imageID:req.params.id},function(err, result) {
     if (err) {
@@ -105,7 +111,43 @@ app.get("/Product/:id",(req, res)=>{
     }
   });
 });
+app.get("/Login",(req, res)=>{
+res.redirect("/Login")
+});
+app.get("/Register",(req, res)=>{
+res.redirect("/Register")
+});
 // Post
+app.post('/delete/:id',(req,res)=>{
+  RU.deleteOne({ _id: req.params.id }, function (err) {
+    if(err) console.log(err);
+  });
+})
+app.post('/update/:id',(req,res)=>{
+  const{name,email} = req.body;
+  console.log(name);
+  RU.updateOne({ _id: req.params.id},  
+    {name,email}, function (err, docs) { 
+    if (err){ 
+        console.log(err) 
+    } 
+    else{ 
+         
+    } 
+}); 
+})
+app.post('/updateEarn/:id',(req,res)=>{
+  const{earn} = req.body;
+  RU.updateOne({ _id: req.params.id},  
+    {earn}, function (err, docs) { 
+    if (err){ 
+        console.log(err) 
+    } 
+    else{ 
+         
+    } 
+}); 
+})
 // Add Product
 app.post("/ProductADD",(req,res)=>{
   const {iteam, price, description, tags, size, offer,BrandName,imageID} = req.body;
@@ -178,6 +220,7 @@ app.post("/Login", (req, res) => {
 // Register
 app.post("/Register", (req, res) => {
   const { email, name, password, address, district, refferal } = req.body;
+  const earn = 0;
   bcrypt.hash(password, saltRounds, function (err, hash) {
     if (err) {
       res.redirect("/Register");
@@ -189,6 +232,7 @@ app.post("/Register", (req, res) => {
         address,
         district,
         refferal,
+        earn
       });
       Register.save((err) => {
         if (err) {

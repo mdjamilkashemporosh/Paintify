@@ -27,6 +27,9 @@ const Register = new Schema({
     refferal:{
         type:String,
         minlength:6,
+    },
+    earn:{
+        type:Number,
     }
     });
     module.exports = Register
