@@ -9,12 +9,15 @@ const saltRounds = 10;
 const Register = require("./Register");
 const Schema = mongoose.Schema;
 const Product = require("./Product");
+const vendor = require('./vendor')
 const imageCollect = require('./imagecollect')
 const port = 5000 || process.env.port;
 const RU = mongoose.model("users", Register);
+const RV = mongoose.model("Vendors", vendor);
 const RP = mongoose.model("product", Product);
 const IC = mongoose.model("imageCollect", imageCollect);
-const multer  = require('multer')
+const multer  = require('multer');
+const shortid = require('shortid');
 const avatar = multer({
     limits:{
         fileSize:1000000,
@@ -48,6 +51,14 @@ app.get("/getuserdata/:id",(req,res)=>{
     if (err) {
     } else {
       res.send(result);
+    }
+  });
+})
+app.get("/getvendordata/:id",(req,res)=>{
+  RV.find({_id:req.params.id},function(err, result) {
+    if (err) {
+    } else {
+      res.json(result);
     }
   });
 })
@@ -111,11 +122,14 @@ app.get("/Product/:id",(req, res)=>{
     }
   });
 });
-app.get("/Login",(req, res)=>{
-res.redirect("/Login")
-});
-app.get("/Register",(req, res)=>{
-res.redirect("/Register")
+app.get("/refferF/:id",(req, res)=>{
+  RU.find({_id:req.params.id},function(err, result) {
+    if (err) {
+      console.log(err,'err in fething product');
+    } else {
+      res.json(result)
+    }
+  });
 });
 // Post
 app.post('/delete/:id',(req,res)=>{
@@ -150,11 +164,12 @@ app.post('/updateEarn/:id',(req,res)=>{
 })
 // Add Product
 app.post("/ProductADD",(req,res)=>{
-  const {iteam, price, description, tags, size, offer,BrandName,imageID} = req.body;
+  const {iteam, price, description,vendor, tags, size, offer,BrandName,imageID} = req.body;
   const Product = new RP({
     iteam,
     price,
     description,
+    vendor,
     tags,
     size,
     offer,
@@ -188,19 +203,19 @@ app.post("/ProductPIC",avatar.array('upload',3),(req, res) => {
      }
    });
 });
-app.post('/AddBrand',(req,res)=>{
-  const {Brand} = req.body
-  const BrandADD = new BA({
-    Brand
-  });
- BrandADD.save((err) => {
-    if (err) {
-      console.log(err);
-    } else {
-      res.status(201).json(Product);
-    }
-});
-})
+// app.post('/AddBrand',(req,res)=>{
+//   const {Brand} = req.body
+//   const BrandADD = new BA({
+//     Brand
+//   });
+//  BrandADD.save((err) => {
+//     if (err) {
+//       console.log(err);
+//     } else {
+//       res.status(201).json(Product);
+//     }
+// });
+// })
 // Login
 app.post("/Login", (req, res) => {
   const { email, password } = req.body;
@@ -211,7 +226,10 @@ app.post("/Login", (req, res) => {
     if (noerr) {
       bcrypt.compare(password, noerr.password, function (error, result) {
         if (result === true) {
-          console.log(noerr);
+          res.json(noerr._id)
+        }
+        if(error){
+          console.log(error);
         }
       });
     }
@@ -221,6 +239,7 @@ app.post("/Login", (req, res) => {
 app.post("/Register", (req, res) => {
   const { email, name, password, refferal } = req.body;
   const earn = 0;
+  const ownrefferal = shortid.generate();
   bcrypt.hash(password, saltRounds, function (err, hash) {
     if (err) {
       res.redirect("/Register");
@@ -230,15 +249,32 @@ app.post("/Register", (req, res) => {
         name,
         password: hash,
         refferal,
+        ownrefferal,
         earn
       });
-      Register.save((err) => {
-        if (err) {
-          res.redirect("/Register");
-        } else {
-          res.status(201).json(Register);
-        }
-      });
+      Register.save();
+    }
+  });
+});
+app.post("/Join", (req, res) => {
+  const { email, name, password, Address,number} = req.body;
+  const vendor = new RV({
+    email,
+    name,
+    password,
+    Address,
+    number
+  });
+  vendor.save();
+});
+app.post("/CheckVendor", (req, res) => {
+  const { email, password } = req.body;
+  RV.findOne({ email,password}, function (err, noerr) {
+    if (err) {
+      console.log(err);
+    }
+    if (noerr){
+      res.json(noerr)
     }
   });
 });

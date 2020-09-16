@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 // Database Schema
-const Register = new Schema({
+const Vendor = new Schema({
     name:{
         type:String,
         required:true,
@@ -16,16 +16,12 @@ const Register = new Schema({
         required:true,
         minlength:6,
     },
-    refferal:{
+    Address:{
         type:String,
         minlength:6,
     },
-    ownrefferal:{
-        type:String,
-        minlength:6,
-    },
-    earn:{
+    Number:{
         type:Number,
     }
     });
-    module.exports = Register
+module.exports = Vendor
