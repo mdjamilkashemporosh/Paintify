@@ -16,14 +16,6 @@ const Register = new Schema({
         required:true,
         minlength:6,
     },
-    address:{
-        type:String,
-        required:true,
-    },
-    district:{
-        type:String,
-        required:true,
-    },
     refferal:{
         type:String,
         minlength:6,

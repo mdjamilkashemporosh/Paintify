@@ -4,13 +4,13 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const app = express();
 const bcrypt = require("bcrypt");
+const path = require('path');
 const saltRounds = 10;
 const Register = require("./Register");
 const Schema = mongoose.Schema;
 const Product = require("./Product");
 const imageCollect = require('./imageCollect')
 const port = 5000 || process.env.port;
-const path = require('path');
 const RU = mongoose.model("users", Register);
 const RP = mongoose.model("product", Product);
 const IC = mongoose.model("imageCollect", imageCollect);
@@ -40,7 +40,7 @@ app.use(express.static(path.join(__dirname, 'build')));
 // Database Model
 // Route
 // Get
-app.get('/', function(req, res) {
+app.get('/*', function(req, res) {
   res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 app.get("/getuserdata/:id",(req,res)=>{
@@ -219,7 +219,7 @@ app.post("/Login", (req, res) => {
 });
 // Register
 app.post("/Register", (req, res) => {
-  const { email, name, password, address, district, refferal } = req.body;
+  const { email, name, password, refferal } = req.body;
   const earn = 0;
   bcrypt.hash(password, saltRounds, function (err, hash) {
     if (err) {
@@ -229,8 +229,6 @@ app.post("/Register", (req, res) => {
         email,
         name,
         password: hash,
-        address,
-        district,
         refferal,
         earn
       });
