@@ -351,7 +351,7 @@ app.listen(port, () => {
     console.log(`Database Connected & App running in port ${port}`);
   } catch(err){
     console.log(err);
-    console.log("Database is't Connected & App is't running ");
+    console.log("Database is't Connected & App is't running :( ");
   }
 });
 // app.listen(port, () => {
