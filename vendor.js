@@ -22,6 +22,9 @@ const Vendor = new Schema({
     },
     Number:{
         type:Number,
+    },
+    access:{
+        type:Boolean
     }
     });
 module.exports = Vendor
