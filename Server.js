@@ -268,7 +268,6 @@ app.post("/ref/:id/:price", (req, res) => {
                     })
                    }
                 })
-        
               }
             }
           );
@@ -341,16 +340,30 @@ app.post("/CheckVendor", (req, res) => {
     }
   });
 });
-// Listening vuwV6K7Y2dMLX9U
-app.listen(port, async () => {
+// Listening
+app.listen(port, () => {
   try {
-    await mongoose.connect("mongodb+srv://demo:vuwV6K7Y2dMLX9U@cluster0.wbmpc.mongodb.net/test?retryWrites=true&w=majority", {
+    mongoose.connect("mongodb+srv://demo:vuwV6K7Y2dMLX9U@cluster0.wbmpc.mongodb.net/test?retryWrites=true&w=majority",{
       useNewUrlParser: true,
       useCreateIndex: true,
       useUnifiedTopology: true,
     });
     console.log(`Database Connected & App running in port ${port}`);
-  } catch {
-    console.log(`Database is't Connected & App is't running `);
+  } catch(err){
+    console.log(err);
+    console.log("Database is't Connected & App is't running ");
   }
 });
+// app.listen(port, () => {
+//   try {
+//     mongoose.connect("mongodb://localhost:27017/error",{
+//       useNewUrlParser: true,
+//       useCreateIndex: true,
+//       useUnifiedTopology: true,
+//     });
+//     console.log(`Database Connected & App running in port ${port}`);
+//   } catch(err){
+//     console.log(err);
+//     console.log("Database is't Connected & App is't running ");
+//   }
+// });
