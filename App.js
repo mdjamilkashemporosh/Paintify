@@ -1,9 +1,8 @@
-const express = require('express')
+const express = require('express');
+const path = require('path');
 const app = express();
-app.get('/',(req,res)=>{
-    res.json('Welcome')
-})
-app.get('/one',(req,res)=>{
-    res.json('one')
-})
-app.listen(5000)
+app.use(express.static(path.join(__dirname, 'build')));
+app.get('/', function(req, res) {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
+app.listen(5000);
