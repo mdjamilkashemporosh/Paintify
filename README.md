@@ -42,4 +42,4 @@ If you would like to contribute to this web application, please open an issue on
 
 ## License
 
-This drawing web application is available under the [MIT License](https://github.com/mdjamilkashemporosh/paint/blob/master/LICENSE). You are free to use, modify, and distribute this project as you see fit.
+This drawing web application is available under the MIT License. You are free to use, modify, and distribute this project as you see fit.
