@@ -1,4 +1,4 @@
-# Paint
+# Paintify
 
 <p align="center">
   <img src="https://github.com/mdjamilkashemporosh/paint/blob/master/favicon.png?raw=true" alt="WowCanvas Logo">
